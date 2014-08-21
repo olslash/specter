@@ -10,7 +10,8 @@ angular.module('specter.tab.marcopolo.controller', [])
       '$rootScope',
       '$ionicPopup',
       '$timeout',
-    function(heatmapService, geoService, $cordovaGeolocation, $scope, location, $stateParams, stacheService, $rootScope, ionicPopup, $timeout) {
+      'userService',
+    function(heatmapService, geoService, $cordovaGeolocation, $scope, location, $stateParams, stacheService, $rootScope, ionicPopup, $timeout, userService) {
       var self = this;
       self.location = {long: "", lat: ""};
       self.id = $stateParams.id.slice(1);
@@ -96,6 +97,14 @@ angular.module('specter.tab.marcopolo.controller', [])
           // If user is within 3 meters, reveal stache
           if (self.distance < 3) {
             console.log("You found the stache!");
+            $cordovaGeolocation.clearWatch(watch);
+            var discoveries = Restangular.all('discoveries');
+            var newDiscovery = {
+              stache_id: stache.id,
+              fb_id: UserService.uid
+            };
+            console.log('saving', newDiscovery);
+            staches.post(newDiscovery);
             // Route to mah' staches view, newest stache is highlighted and can be clicked on for viewing
           } else if (!visited) {
             console.log("User has traveled, adding new location to heatmap.");
