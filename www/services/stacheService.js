@@ -1,5 +1,11 @@
 (function(){
   'use strict';
+  angular.module('specter').factory('CachedRestangular', function (Restangular) {
+    return Restangular.withConfig(function (RestangularConfigurer) {
+      RestangularConfigurer.setDefaultHttpFields({cache: true});
+    });
+  });
+
   var stacheService = function(Restangular, CachedRestangular, UserService){
     this.getAll = function(location){
       return CachedRestangular.all('staches/').customGET("", location).then(function(staches){
@@ -33,17 +39,7 @@
         return err;
       });
     };
-    this.selectedStache = '';
   };
   stacheService.$inject = ['Restangular', 'CachedRestangular', 'UserService'];
   angular.module('specter').service('stacheService', stacheService);
-})();
-
-
-(function(){
-angular.module('specter').factory('CachedRestangular', function (Restangular) {
-  return Restangular.withConfig(function (RestangularConfigurer) {
-    RestangularConfigurer.setDefaultHttpFields({cache: true});
-  });
-});
 })();
