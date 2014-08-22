@@ -15,19 +15,13 @@
    top:0;
    left:0;
    width:100%;
-   height: 20px;
+   height: 40px;
    background-color: white;
 }
 
-/*.bar {
-  height: 20px !important;
-}*/
-.bar-header {
+.bar {
   height: 20px !important;
 }
-
-.button-block {
-  width: 95% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+.bar-header {
+  height: 20px !important;
 }
