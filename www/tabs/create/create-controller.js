@@ -1,6 +1,6 @@
 (function(){
     var createCtrl = function($ionicActionSheet, $ionicPopup, Restangular, cameraService,
-      stacheService, $cordovaCapture, $cordovaGeolocation, geoService, $ionicModal, $scope) {
+      stacheService, $cordovaCapture, $cordovaGeolocation, geoService, $ionicModal, $scope, $state) {
       var self = this;
       this.data = {
         currentTags: {}
@@ -144,21 +144,39 @@
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function(modal) {
-        $scope.modal = modal;
+        $scope.privateModal = modal;
+      });
+      
+      $ionicModal.fromTemplateUrl('created-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        $scope.createdModal = modal;
+      });
+      
+      $scope.$on('$destroy', function() {
+        $scope.privateModal.remove();
       });
 
-      $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-      });
+      this.openCreatedModal = function() {
+        $scope.createdModal.show();
+      };
 
       this.openPrivateModal = function() {
         if(self.checked) {
-          $scope.modal.show();
+          $scope.privateModal.show();
         }
       };
 
       this.closeModal = function() {
-        $scope.modal.hide();
+        $scope.privateModal.hide();
+        $scope.createdModal.hide();
+      };
+
+      this.goToProfile = function() {
+        self.closeModal();
+        $state.go('tab.profile');  
+
       };
 
       //call get location on click of the create button
@@ -171,7 +189,7 @@
 
     };
   createCtrl.$inject = [ '$ionicActionSheet', '$ionicPopup', 'Restangular', 'cameraService',
-    'stacheService', '$cordovaCapture', '$cordovaGeolocation', 'geoService', "$ionicModal",'$scope'];
+    'stacheService', '$cordovaCapture', '$cordovaGeolocation', 'geoService', "$ionicModal",'$scope', '$state'];
   angular.module('specter.tab.create.controller', ['restangular'])
     .controller('createCtrl', createCtrl);
 })();
